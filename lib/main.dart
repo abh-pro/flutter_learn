@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_learn/app.dart';
-
+import 'App.dart';
 void main() {
   runApp(MaterialApp(
-    home: App() ,
+    home: App(),
   ),
   );
 }
