@@ -25,7 +25,10 @@ class _AppState extends State<App>{
           actions: <Widget>[
             IconButton(onPressed: (){setState(() {
               deleteTiles();
-              });}, icon: selected.length>0 ? Icon(Icons.delete,color: Colors.white) : Icon(Icons.delete_outline,color: Colors.black))
+              });}, icon: selected.length>0 ? Icon(Icons.delete,color: Colors.white) : Icon(Icons.delete_outline,color: Colors.black)),
+            Text(
+              selected.length.toString()
+                )
           ],
         ),
         body: SingleChildScrollView(
@@ -108,10 +111,14 @@ class _AppState extends State<App>{
     print(selected);
   }
   Icon iconInSelection(int index){
+    setState(() {
+
+    });
     if(_inSelection){
         return Icon(selected.contains(index) ? Icons.check_circle : Icons.check_circle_outline);
+    }else {
+      return Icon(Icons.account_circle_outlined);
     }
-    return Icon(Icons.account_circle_outlined);
   }
 
   void deleteTiles(){
@@ -121,7 +128,6 @@ class _AppState extends State<App>{
       for(int llp=0;llp<selected.length;llp++){
         temp.add(mapper.indexOf(selected[llp]));
       }
-      print("map");
       print(mapper);
       for(int i=0;i<temp.length;i++){
         data.removeAt(temp[i]);
