@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Screen extends StatelessWidget {
-  final String _titleData,_subtitleData;
+  final Text _titleData,_subtitleData;
 
   Screen(this._titleData,this._subtitleData);
 
@@ -9,9 +9,9 @@ class Screen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(this._titleData),
+        title: this._titleData,
       ),
-      body: Text(this._subtitleData),
+      body: this._subtitleData,
     );
   }
 }

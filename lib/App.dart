@@ -1,47 +1,50 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'screens.dart';
-// List<Widget> data = [];
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
+
   @override
   _AppState createState() => _AppState();
 }
 
-class _AppState extends State<App>{
-  List<Widget> data = [];
-  List<int> mapper = [];
+class _AppState extends State<App> {
+  List data = [];
   List<int> selected = [];
-  int _indexMap=0;
   bool _inSelection = false;
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return MaterialApp(
       title: "floating button",
       home: Scaffold(
         appBar: AppBar(
           title: Text("App exist"),
           actions: <Widget>[
-            IconButton(onPressed: (){setState(() {
-              deleteTiles();
-              });}, icon: selected.length>0 ? Icon(Icons.delete,color: Colors.white) : Icon(Icons.delete_outline,color: Colors.black)),
-            Text(
-              selected.length.toString()
-                )
+            unSelection(),
+            Center(child: Text(retSelected(),style: TextStyle(fontSize: 20.0),textAlign: TextAlign.center)),
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    deleteTiles();
+                  });
+                },
+                icon: selected.length > 0
+                    ? Icon(Icons.delete, color: Colors.white)
+                    : Icon(Icons.delete_outline, color: Colors.black)),
           ],
         ),
         body: SingleChildScrollView(
             child: Column(
           textDirection: TextDirection.ltr,
           mainAxisAlignment: MainAxisAlignment.start,
-          children: data,
-        )
-        ),
+          children: generateChildren(context),
+        )),
         floatingActionButton: FloatingActionButton(
-          onPressed: (){
+          onPressed: () {
             setState(() {
-              createListTile(context); //adding list create here
+              addIntoData(); //add data into data array
             });
           },
           child: const Icon(Icons.add_box_rounded),
@@ -52,89 +55,117 @@ class _AppState extends State<App>{
     );
   }
 
-
-  void createListTile(BuildContext context){
-    Text title = Text(_getRandomStrings());
-    Text subtitle = Text(_getRandomStrings());
-    int index = _indexMap;
-    _indexMap += 1;
-    data.add(
-        ListTile(
-            title: title,
-            subtitle: subtitle,
-            trailing: Icon(Icons.arrow_forward),
-            leading: iconInSelection(index),
-            onTap: (){
-
-              if(_inSelection){
-                setState(() {
-                  selectTile(index);
-                });
-              }else{
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Screen(title,subtitle))
-                );
-              }
-              print(index);
-            },
-          onLongPress: (){
-              // call selection window
+  Widget unSelection(){
+    if(_inSelection){
+      return IconButton(
+          onPressed: () {
             setState(() {
-              if(!_inSelection){
-                _inSelection = true;
-                // select function
-                selectTile(index);
-              }
+              _inSelection = false;
+              selected.clear();
             });
-
           },
-        )
-    );
-    mapper.add(index);
+          icon: Icon(Icons.clear)
+      );
+    }
+    return Text("");
   }
 
-  String _getRandomStrings(){
+  String retSelected(){
+    if(_inSelection){
+      if(selected.length > 0)
+        return selected.length.toString();
+    }
+    return "";
+  }
+
+  void addIntoData() {
+    data.add(new TileData(_getRandomStrings(), _getRandomStrings()));
+  }
+
+  List<Widget> generateChildren(BuildContext context) {
+    if (data.length == 0) {
+      return [];
+    }
+    TileData temp;
+    List<Widget> returningList = [];
+    for (int i = 0; i < data.length; i++) {
+      temp = data[i];
+      returningList.add(ListTile(
+        title: Text(temp.title),
+        subtitle: Text(temp.subtitle),
+        trailing: Icon(Icons.arrow_forward),
+        leading: iconInSelection(i),
+        selectedTileColor: Colors.grey,
+        selected: selected.contains(i),
+        onTap: () {
+          if (_inSelection) {
+            setState(() {
+              selectTile(i);
+            });
+          } else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Screen(temp.title, temp.subtitle)));
+          }
+        },
+        onLongPress: () {
+          setState(() {
+            if (!_inSelection) {
+              _inSelection = true;
+              // select function
+              selectTile(i);
+            }
+          });
+        },
+      ));
+    }
+    return returningList;
+  }
+
+  String _getRandomStrings() {
     const chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
-    const int len=5;
+    const int len = 5;
     var rand = Random();
-    var llp = Iterable.generate(len,(_)=> chars.codeUnitAt(rand.nextInt(chars.length)));
+    var llp = Iterable.generate(
+        len, (_) => chars.codeUnitAt(rand.nextInt(chars.length)));
     return String.fromCharCodes(llp);
   }
 
-  void selectTile(int index){
-    if(selected.contains(index)){
+  void selectTile(int index) {
+    if (selected.contains(index)) {
       selected.remove(index);
-    }else {
+    } else {
       selected.add(index);
     }
-    print(selected);
   }
-  Icon iconInSelection(int index){
-    setState(() {
 
-    });
-    if(_inSelection){
-        return Icon(selected.contains(index) ? Icons.check_circle : Icons.check_circle_outline);
-    }else {
+  Icon iconInSelection(int index) {
+    if (_inSelection) {
+      return Icon(selected.contains(index)
+          ? Icons.check_circle
+          : Icons.check_circle_outline);
+    } else {
       return Icon(Icons.account_circle_outlined);
     }
   }
 
-  void deleteTiles(){
-    List<int> temp = [];
-    if(selected.length>0){
-      // selected.forEach((element) {temp.add(mapper.indexOf(element));});
-      for(int llp=0;llp<selected.length;llp++){
-        temp.add(mapper.indexOf(selected[llp]));
+  void deleteTiles() {
+    if (selected.length > 0) {
+      //need to be modified
+      for (int i = 0; i < selected.length; i++) {
+        data[selected[i]] = null;
       }
-      print(mapper);
-      for(int i=0;i<temp.length;i++){
-        data.removeAt(temp[i]);
-        mapper.removeAt(temp[i]);
-      }
+      data.removeWhere((element) => element == null);
       selected.clear();
       _inSelection = false;
     }
   }
+}
+
+class TileData {
+  late String title;
+  late String subtitle;
+
+  TileData(this.title, this.subtitle);
 }
