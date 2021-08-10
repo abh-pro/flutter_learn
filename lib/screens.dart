@@ -21,14 +21,14 @@ class Screen extends StatelessWidget {
                   this._titleData,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20
+                    fontSize: 30
                   ),
                 ),
               ),
               Text(
                 this._subtitleData,
                 style: TextStyle(
-                  color: Colors.grey[500]
+                  color: Colors.indigo[200]
                 ),
               )
             ],
@@ -37,20 +37,21 @@ class Screen extends StatelessWidget {
       ),
     );
 
-
-
-
-
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: (){
-            Navigator.pop(context);
+            Navigator.pop(context,false);
           },
           icon: Icon(Icons.arrow_back),
         ),
         title: Text("Detail Screen"),
+        actions: [
+          IconButton(onPressed: (){
+            Navigator.pop(context,true);
+            },
+              icon: Icon(Icons.delete))
+        ],
       ),
       body: ListView(
         children: [

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'screens.dart';
 
-List<int> deletion = [];
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -108,7 +107,12 @@ class _AppState extends State<App> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => Screen(temp.title, temp.subtitle)));
+                      builder: (context) => Screen(temp.title, temp.subtitle))).then((value) {
+                        setState(() {
+                          if (value)
+                            data.removeAt(i);
+                        });
+              });
           }
         },
         onLongPress: () {
