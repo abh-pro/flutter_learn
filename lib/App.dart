@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'screens.dart';
 
+List<int> deletion = [];
+
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
 
@@ -86,10 +88,10 @@ class _AppState extends State<App> {
     if (data.length == 0) {
       return [];
     }
-    TileData temp;
+
     List<Widget> returningList = [];
     for (int i = 0; i < data.length; i++) {
-      temp = data[i];
+      TileData temp = data[i];
       returningList.add(ListTile(
         title: Text(temp.title),
         subtitle: Text(temp.subtitle),
@@ -103,10 +105,10 @@ class _AppState extends State<App> {
               selectTile(i);
             });
           } else {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Screen(temp.title, temp.subtitle)));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Screen(temp.title, temp.subtitle)));
           }
         },
         onLongPress: () {
