@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'App.dart';
-
+import 'package:flutter_learn/App.dart';
 void main() {
   runApp(MaterialApp(
-    title: "color shift app",
+    title: "grid view",
     home: App(),
-    debugShowCheckedModeBanner: false,
-  ),
+    )
   );
 }
